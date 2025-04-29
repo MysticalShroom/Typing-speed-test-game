@@ -1,0 +1,22 @@
+# Virtual Environment
+.venv/
+venv/
+env/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE configuration (optional, usually good to ignore)
+.vscode/
+# .idea/ # If using PyCharm
+
+# Results file (optional - decide if you want results tracked)
+# typing_results.txt
+
+# Add any other files/folders you want Git to ignore
