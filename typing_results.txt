@@ -39,3 +39,4 @@ Timestamp: 2025-05-03 18:17:49, Difficulty: Random, Word count: 10, WPM: 52, Acc
 Timestamp: 2025-05-03 18:18:17, Difficulty: Easy, Word count: 5, WPM: 116, Accuracy: 100.0%, Errors: 0, Time: 2
 Timestamp: 2025-05-03 18:32:07, Difficulty: Random, Word count: 10, WPM: 84, Accuracy: 100.0%, Errors: 0, Time: 10
 Timestamp: 2025-05-03 18:44:58, Difficulty: Random, Word count: 13, WPM: 57, Accuracy: 100.0%, Errors: 0, Time: 21
+Timestamp: 2025-05-04 17:24:05, Difficulty: Random, Word count: 5, WPM: 37, Accuracy: 89.7%, Errors: 4, Time: 12
