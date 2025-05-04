@@ -17,6 +17,6 @@ Thumbs.db
 # .idea/ # If using PyCharm
 
 # Results file (optional - decide if you want results tracked)
-# typing_results.txt
+typing_results.txt
 
 # Add any other files/folders you want Git to ignore
