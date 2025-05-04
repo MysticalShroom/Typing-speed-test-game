@@ -27,3 +27,15 @@ Timestamp: 2025-04-30 00:49:58, Difficulty: Random, Word count: 10, WPM: 71, Acc
 Timestamp: 2025-04-30 00:51:40, Difficulty: Medium, Word count: 10, WPM: 22, Accuracy: 100.0%, Errors: 0, Time: 32
 Timestamp: 2025-04-30 00:52:47, Difficulty: Easy, Word count: 15, WPM: 24, Accuracy: 100.0%, Errors: 0, Time: 34
 Timestamp: 2025-04-30 00:54:33, Difficulty: Random, Word count: 50, WPM: 65, Accuracy: 99.7%, Errors: 1, Time: 57
+Timestamp: 2025-04-30 12:12:20, Difficulty: Medium, Word count: 20, WPM: 118, Accuracy: 30.3%, Errors: 83, Time: 12
+Timestamp: 2025-05-03 16:49:23, Difficulty: Random, Word count: 25, WPM: 111, Accuracy: 20.8%, Errors: 118, Time: 16
+Timestamp: 2025-05-03 17:03:08, Difficulty: Random, Word count: 25, WPM: 34, Accuracy: 98.3%, Errors: 3, Time: 63
+Timestamp: 2025-05-03 17:07:11, Difficulty: Random, Word count: 25, WPM: 124, Accuracy: 26.1%, Errors: 133, Time: 17
+Timestamp: 2025-05-03 17:15:04, Difficulty: Random, Word count: 25, WPM: 319, Accuracy: 5.6%, Errors: 170, Time: 6
+Timestamp: 2025-05-03 17:29:16, Difficulty: Random, Word count: 5, WPM: 74, Accuracy: 100.0%, Errors: 0, Time: 6
+Timestamp: 2025-05-03 17:34:59, Difficulty: Random, Word count: 5, WPM: 104, Accuracy: 100.0%, Errors: 0, Time: 4
+Timestamp: 2025-05-03 18:17:11, Difficulty: Random, Word count: 5, WPM: 65, Accuracy: 76.9%, Errors: 9, Time: 7
+Timestamp: 2025-05-03 18:17:49, Difficulty: Random, Word count: 10, WPM: 52, Accuracy: 94.9%, Errors: 4, Time: 17
+Timestamp: 2025-05-03 18:18:17, Difficulty: Easy, Word count: 5, WPM: 116, Accuracy: 100.0%, Errors: 0, Time: 2
+Timestamp: 2025-05-03 18:32:07, Difficulty: Random, Word count: 10, WPM: 84, Accuracy: 100.0%, Errors: 0, Time: 10
+Timestamp: 2025-05-03 18:44:58, Difficulty: Random, Word count: 13, WPM: 57, Accuracy: 100.0%, Errors: 0, Time: 21

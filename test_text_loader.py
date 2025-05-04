@@ -1,11 +1,8 @@
-# test_text_loader.py
 import unittest
-from unittest.mock import patch  # <<< Import patch
+from unittest.mock import patch
 
-# Import the class we want to test (make sure text_loader.py is accessible)
 from text_loader import LocalFolderWordLoader
 
-# Dummy folder path for initialization (won't actually be used due to mock)
 DUMMY_FOLDER_PATH = "dummy_test_words"
 
 

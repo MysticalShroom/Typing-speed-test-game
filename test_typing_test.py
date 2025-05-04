@@ -28,12 +28,11 @@ class TestTypingTestLogic(unittest.TestCase):
 
         if not self.test_instance.has_started_typing and chars_to_type:
             self.test_instance.has_started_typing = True
-            # No need to set start_time for error testing
 
         for char_or_code in chars_to_type:
             current_len = len(self.test_instance.current_text)
 
-            if char_or_code in BACKSPACE_CODES:  # Simulate backspace
+            if char_or_code in BACKSPACE_CODES:
                 if self.test_instance.current_text:
                     removed_idx = current_len - 1
                     if (
@@ -45,7 +44,7 @@ class TestTypingTestLogic(unittest.TestCase):
                             0, self.test_instance.errors - 1
                         )
                     self.test_instance.current_text.pop()
-            elif isinstance(char_or_code, str):  # Simulate printable char
+            elif isinstance(char_or_code, str):
                 if current_len < len(self.test_instance.target_text):
                     target_char = self.test_instance.target_text[current_len]
                     if char_or_code != target_char:
@@ -60,17 +59,15 @@ class TestTypingTestLogic(unittest.TestCase):
 
     def test_error_increment_incorrect_typing(self):
         """Test error count increments for incorrect characters."""
-        self.simulate_typing(["h", "X", "l", "l", "Y"])  # X and Y are errors
+        self.simulate_typing(["h", "X", "l", "l", "Y"])
         self.assertEqual(self.test_instance.errors, 2)
         self.assertEqual("".join(self.test_instance.current_text), "hXllY")
 
     def test_backspace_corrects_error_count(self):
         """Test backspace removes error and decrements count."""
-        backspace = BACKSPACE_CODES[0]  # Use the first code for simulation
-        self.simulate_typing(
-            ["h", "e", "X", backspace, "l", "l", "o"]
-        )  # Type X, backspace, type l
-        self.assertEqual(self.test_instance.errors, 0)  # Error X was removed
+        backspace = BACKSPACE_CODES[0]
+        self.simulate_typing(["h", "e", "X", backspace, "l", "l", "o"])
+        self.assertEqual(self.test_instance.errors, 0)
         self.assertEqual("".join(self.test_instance.current_text), "hello")
 
     def test_backspace_does_not_affect_error_count_if_correct(self):
@@ -91,7 +88,6 @@ class TestTypingTestLogic(unittest.TestCase):
 
     def test_multiple_errors_and_backspaces(self):
         backspace = BACKSPACE_CODES[0]
-        # Target: "hello world"
         self.simulate_typing(
             [
                 "h",

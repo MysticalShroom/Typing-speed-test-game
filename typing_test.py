@@ -1,25 +1,15 @@
-# typing_test.py
-"""
-Contains the main TypingTest class for managing the application UI and logic.
-"""
 import curses
-import time  # Still needed for time.time()
+import time
 from datetime import datetime
 
+from text_loader import TextLoader
 
-# Import necessary components from other modules
-from text_loader import TextLoader  # Import the ABC
-
-# Import constants directly
 from config import RESULTS_FILENAME, ESCAPE_KEY, BACKSPACE_CODES
 from utils import calculate_wpm, calculate_accuracy
 
 
 class TypingTest:
-    """Manages the Typing Speed Test application using curses."""
-
     def __init__(self, stdscr, text_loader: TextLoader):
-        """Initializes the TypingTest application."""
         self.stdscr = stdscr
         self.text_loader = text_loader
         self.target_text: str = ""
@@ -32,7 +22,6 @@ class TypingTest:
         self.errors: int = 0
 
     def _show_difficulty_screen(self) -> str:
-        """Displays the difficulty selection screen and returns the choice."""
         self.stdscr.clear()
         self.stdscr.addstr(0, 0, "Select difficulty:")
         self.stdscr.addstr(2, 0, "1. Easy")
@@ -61,7 +50,6 @@ class TypingTest:
                 continue
 
     def _show_word_count_screen(self) -> int:
-        """Displays the word count input screen and returns the value."""
         self.stdscr.clear()
         self.stdscr.addstr(0, 0, "How many words? (5-50)")
         prompt = "Enter number (ESC to quit): "
@@ -86,14 +74,12 @@ class TypingTest:
                         if x > input_start_col:
                             self.stdscr.move(y, x - 1)
                             self.stdscr.delch()
-                # Check ASCII range for digits '0' to '9'
                 elif 48 <= key_code <= 57:
-                    if len(input_str) < 2:  # Max 2 digits
+                    if len(input_str) < 2:
                         input_str += chr(key_code)
-                        self.stdscr.addch(key_code)  # Manual echo
+                        self.stdscr.addch(key_code)
                 self.stdscr.refresh()
             except curses.error:
-                # Simplified redraw on error
                 self.stdscr.clear()
                 self.stdscr.addstr(0, 0, "How many words? (5-50) (resized?)")
                 self.stdscr.addstr(prompt_row, 0, prompt + input_str)
@@ -101,8 +87,8 @@ class TypingTest:
                 continue
             except SystemExit:
                 raise
-            except Exception:  # Catch any other unexpected error
-                continue  # Ignore and let user try again
+            except Exception:
+                continue
         curses.curs_set(0)
         try:
             word_count = int(input_str) if input_str else 25
@@ -111,7 +97,6 @@ class TypingTest:
         return max(5, min(50, word_count))
 
     def start(self):
-        """Starts the main application loop."""
         try:
             self._init_colors()
         except RuntimeError as e:
@@ -142,7 +127,7 @@ class TypingTest:
             except SystemExit:
                 break
 
-            while True:  # Inner retry loop
+            while True:
                 self.current_text = []
                 self.wpm = 0
                 self.start_time = 0.0
@@ -154,14 +139,12 @@ class TypingTest:
                     if not should_retry_same:
                         break
                 except SystemExit:
-                    return  # Exit app cleanly
+                    return
                 except curses.error:
-                    # Attempt to display error within curses if possible
                     self._display_error("A window error occurred.")
-                    return  # Exit application
+                    return
 
     def _init_colors(self):
-        """Initializes color pairs."""
         try:
             curses.start_color()
             curses.use_default_colors()
@@ -171,14 +154,11 @@ class TypingTest:
             curses.init_pair(4, curses.COLOR_CYAN, -1)
             curses.init_pair(5, curses.COLOR_YELLOW, -1)
         except curses.error as e:
-            # Raise a runtime error that main can potentially catch
             raise RuntimeError(f"Color setup failed: {e}.") from e
         except Exception as e:
-            # Catch other potential init errors
             raise RuntimeError(f"Color setup failed unexpectedly: {e}") from e
 
     def _show_start_screen(self):
-        """Displays the welcome screen before a test starts."""
         self.stdscr.clear()
         self.stdscr.addstr(0, 0, "Welcome!", curses.color_pair(3))
         self.stdscr.addstr(
@@ -188,12 +168,10 @@ class TypingTest:
         self.stdscr.addstr(4, 0, "Press any key to begin!", curses.color_pair(3))
         self.stdscr.refresh()
         try:
-            self.stdscr.nodelay(False)  # Blocking wait
+            self.stdscr.nodelay(False)
             self.stdscr.getkey()
         except curses.error:
-            # If error happens waiting for key (e.g. resize), exit gracefully
             self._display_error("Input error before start. Exiting.")
-            # _display_error now raises SystemExit
 
     def _display_test_ui(self, time_elapsed: float):
         """Displays the main typing test interface."""
@@ -201,7 +179,7 @@ class TypingTest:
         max_y, max_x = self.stdscr.getmaxyx()
         start_row = 3
 
-        try:  # Draw Headers (broken long lines)
+        try:
             diff_str = f"Diff: {self.difficulty.capitalize()}"
             word_str = f"Words: {self.word_count}"
             err_str = f"Errors: {self.errors}"
@@ -212,12 +190,10 @@ class TypingTest:
             wpm_str_display = (
                 f"WPM: {self.wpm}" if self.has_started_typing else "WPM: 0"
             )
-            # Line 0
             self.stdscr.addstr(0, 0, diff_str, curses.color_pair(4))
             col_after_diff = len(diff_str) + 2
             if col_after_diff + len(word_str) < max_x:
                 self.stdscr.addstr(0, col_after_diff, word_str, curses.color_pair(4))
-            # Line 1
             self.stdscr.addstr(1, 0, time_str_display, curses.color_pair(4))
             errors_start_pos = len(time_str_display) + 2
             if errors_start_pos + len(err_str) < max_x:
@@ -228,9 +204,8 @@ class TypingTest:
                     1, wpm_start_pos, wpm_str_display, curses.color_pair(3)
                 )
         except curses.error:
-            pass  # Ignore drawing errors if window too small
+            pass
 
-        # --- Display target/typed text ---
         cursor_y, cursor_x = start_row, 0
         if self.target_text:
             line_y, line_x = start_row, 0
@@ -239,7 +214,7 @@ class TypingTest:
                     line_y, line_x = line_y + 1, 0
                 if line_y >= max_y:
                     break
-                display_char, color_pair_num = target_char, 3  # Defaults
+                display_char, color_pair_num = target_char, 3
                 if i < len(self.current_text):
                     typed_char = self.current_text[i]
                     display_char = typed_char
@@ -257,14 +232,13 @@ class TypingTest:
                 except curses.error:
                     pass
                 line_x += 1
-            if len(self.current_text) == len(self.target_text):  # Final cursor pos
+            if len(self.current_text) == len(self.target_text):
                 if line_x >= max_x:
                     line_y += 1
                     line_x = 0
                 if line_y < max_y:
                     cursor_y, cursor_x = line_y, line_x
 
-        # --- Move cursor ---
         is_test_finished = len(self.current_text) == len(self.target_text)
         if not is_test_finished and cursor_y < max_y and cursor_x < max_x:
             try:
@@ -274,7 +248,6 @@ class TypingTest:
         self.stdscr.refresh()
 
     def _run_test(self):
-        """Runs the main typing test loop."""
         if not self.target_text:
             raise ValueError("Target text is empty.")
         self.stdscr.nodelay(True)
@@ -341,27 +314,21 @@ class TypingTest:
     def _save_results_to_file(
         self, wpm: int, accuracy: float, time_taken: float, errors: int
     ):
-        """Saves the test results to a plain text file."""
         timestamp_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        # Break long f-string
         result_line = (
             f"Timestamp: {timestamp_str}, Difficulty: {self.difficulty.capitalize()}, "
             f"Word count: {self.word_count}, WPM: {wpm}, "
             f"Accuracy: {accuracy}%, Errors: {errors}, Time: {int(time_taken)}"
         )
         try:
-            # Ensure RESULTS_FILENAME is imported or defined
             with open(RESULTS_FILENAME, "a", encoding="utf-8") as f:
                 f.write(result_line + "\n")
         except (IOError, OSError) as e:
-            # Consider logging this error instead of printing if it interferes
-            # But print is fine for now, visible after exit
             print(f"\nError writing results: {e}")
         except Exception as e:
             print(f"\nUnexpected error writing results: {e}")
 
     def _prompt_retry(self) -> bool:
-        """Displays results, saves them, asks action."""
         time_taken = time.time() - self.start_time if self.has_started_typing else 0.0
         accuracy = 0.0
         target_len = len(self.target_text)
@@ -376,22 +343,19 @@ class TypingTest:
         start_row_text = 3
         if target_len > 0 and max_x > 1:
             num_text_lines = (target_len + max_x - 1) // max_x
-        # Ensure at least 3 lines below text area for results/prompt
         results_start_row = min(max_y - 3, start_row_text + num_text_lines + 1)
 
-        for r in range(results_start_row, max_y):  # Clear result area
+        for r in range(results_start_row, max_y):
             try:
                 self.stdscr.move(r, 0)
                 self.stdscr.clrtoeol()
             except curses.error:
                 pass
 
-        # Place prompt just below results line
         prompt_row = results_start_row + 2
 
         try:
             title = "--- Test Complete! ---"
-            # Break potentially long results line
             res_line1 = (
                 f"WPM: {final_wpm} | Accuracy: {accuracy}% ({self.errors} err) | "
                 f"Time: {int(time_taken)}s"
@@ -399,57 +363,49 @@ class TypingTest:
             prompt = "R: Retry | N: New Test | Any key: Quit"
 
             self.stdscr.addstr(results_start_row, 0, title, curses.A_BOLD)
-            # Check bounds before adding result line
             if results_start_row + 1 < max_y:
                 self.stdscr.addstr(
                     results_start_row + 1, 0, res_line1, curses.color_pair(3)
                 )
-            # Check bounds before adding prompt line
             if prompt_row < max_y:
                 self.stdscr.addstr(prompt_row, 0, prompt, curses.color_pair(3))
-            else:  # Fallback if screen too small
+            else:
                 self.stdscr.addstr(
                     max_y - 1, 0, "R:Retry|N:New|Quit?", curses.color_pair(3)
                 )
         except curses.error:
-            # Fallback if even drawing results fails
             try:
                 self.stdscr.addstr(
                     max_y - 1, 0, "R:Retry|N:New|Quit?", curses.color_pair(3)
                 )
             except curses.error:
-                pass  # Give up if screen is tiny
+                pass
 
         self.stdscr.refresh()
 
-        # --- Get user choice (FIXED F841 logic) ---
         key = ""
         try:
-            self.stdscr.nodelay(False)  # Wait for input
+            self.stdscr.nodelay(False)
             key = self.stdscr.getkey()
 
-            # Process immediately
             if isinstance(key, str):
                 key_lower = key.lower()
                 if key_lower == "n":
                     return False
                 elif key_lower == "r":
                     return True
-            # If not a string OR not 'n'/'r', quit
             raise SystemExit()
 
         except curses.error:
-            raise SystemExit()  # Treat curses errors as Quit
+            raise SystemExit()
         except Exception:
-            raise SystemExit()  # Treat other errors as Quit
+            raise SystemExit()
 
     def _display_error(self, message: str):
-        """Displays an error message and waits for key press to exit."""
         if not curses.isendwin():
             try:
                 self.stdscr.nodelay(False)
                 self.stdscr.clear()
-                # Check bounds before drawing error
                 max_y, max_x = self.stdscr.getmaxyx()
                 if max_y > 0 and max_x > 0:
                     self.stdscr.addstr(
@@ -458,7 +414,7 @@ class TypingTest:
                 if max_y > 2 and max_x > 0:
                     self.stdscr.addstr(2, 0, "Press any key to exit.")
                 self.stdscr.refresh()
-                self.stdscr.getkey()  # Wait for key
+                self.stdscr.getkey()
             except Exception:
-                pass  # Ignore errors during error display itself
-        raise SystemExit()  # Ensure exit after showing error
+                pass
+        raise SystemExit()
